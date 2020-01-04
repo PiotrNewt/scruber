@@ -72,12 +72,11 @@ def completeTable(path,rpath,pair):
 
     r_df.to_csv(rpath, index=False)
 
-'''
 # stadium
 pair = [[' 位置','location'],[' 竣工时间','completion_time'],[' 容量','num_seats']]
 completeTable('./rough_tables/stadium.csv','./stadium_r.csv',pair)
 # team
-pair = [[' 角逐赛事','league_id'],[' 所属地区','location'],[' 成立时间','established'],[' 主场馆','stadium_id'],[' 现任主教练','coach'],[' 现任队长','captain']]
+pair = [[' 角逐赛事','league_id'],[' 所属地区','location'],[' 成立时间','established'],[' 主场馆','stadium_id'],[' 现任主教练','coach']]
 completeTable('./rough_tables/team.csv','./team_r.csv',pair)
 # country
 pair = [[' 国家代码','code'],[' 首都','capital'],[' 官方语言','language'],[' 货币','currency']]
@@ -85,5 +84,5 @@ completeTable('./rough_tables/country.csv','./country.csv',pair)
 # league_r
 pair = [[' 国家','country'],[' 成立年份','year_established'],[' 球队数目','num_teams'],[' 所属协会','association']]
 completeTable('./rough_tables/league.csv','./league_r.csv',pair)
-'''
+
 
