@@ -9,8 +9,8 @@ kb.columns = ['n1', 'rela', 'n2']
 
 print('load KB finished')
 
-paths = ['country','league','player','stadium','team']
-needClean = [0,0,1,0,0]
+paths = ['player','team','league','country','stadium']
+needClean = [1,0,0,0,0]
 
 def getRela(n1,n2):
     # n1 is the source node
@@ -35,7 +35,7 @@ for i in range(0,n_col):
     for j in range(i+1,n_col):
         # one relationship
         for k, _ in df.iterrows():
-            if (df.iloc[k,i] == 'dirty_data') & (df.iloc[k,j] == 'dirty_data'):
+            if (df.iloc[k,i] == 'dirty_data') | (df.iloc[k,j] == 'dirty_data'):
                 continue
             n1 = df.iloc[k,i]
             n2 = df.iloc[k,j]

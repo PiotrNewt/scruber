@@ -11,8 +11,8 @@ import pickle
 # stadium   56 * 5
 # team      50 * 7
 
-paths = ['country','league','player','stadium','team']
-ps = [0,0,0.01,0,0]
+paths = ['player','team','league','country','stadium']
+ps = [0.01,0,0,0,0]
 
 i = 0
 for path in paths:
