@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from collections import Counter
 
-kb = pd.read_csv('././kb/7kb.csv')
+kb = pd.read_csv('././kb/tinykb.csv')
 kb.columns = ['n1', 'rela', 'n2']
 
 print('load KB finished')
@@ -30,8 +30,7 @@ df = pd.read_csv('././experiment/d/' + path + '_d.csv')
 n_row = df.shape[0]
 n_col = df.shape[1]
 
-pattern = np.empty([n_row,n_col], dtype=np.object)
-print(n_col)
+pattern = np.empty([n_col,n_col], dtype=np.object)
 for i in range(0,n_col):
     for j in range(i+1,n_col):
         # one relationship
@@ -44,13 +43,19 @@ for i in range(0,n_col):
             if (r == None) & (k >= 2):
                 break
             else:
+                pattern[i,j] = r
+                pattern[j,i] = r
                 continue
-            pattern[i,j] = r
-            pattern[j,i] = r
+
+
+# TODO: use crowd to find more edge in patten
+# if an attribute column has no relationship with the other,
+# we find the point with the highest degree( maybe N0.1,2,3 ) and ask crowd
+
 
 def loopMatching(n2,rela):
     # n1 is the source node
-    df = kb[(kb.n1 == n2) & (kb.rela == rela)]
+    df = kb[(kb.n1.str.contains(n2)) & (kb.rela == rela)]
     if len(df) != 0:
         return df.n2.values[0]
     # n2 is the source node

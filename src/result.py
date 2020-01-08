@@ -34,5 +34,5 @@ for path in paths:
         if df_c.iloc[idx[0],idx[1]] == df_s.iloc[idx[0],idx[1]]:
             n += 1
 
-    print('num_dd = {}, repair = {}'.format(len(dirty_idx), n))
+    print('{} : num_dd = {}, repair = {}, rate = {}'.format(path, len(dirty_idx), n, (n/len(dirty_idx))))
     i += 1
