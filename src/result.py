@@ -16,7 +16,7 @@ for path in paths:
         continue
 
     n = 0
-    df_c = pd.read_csv('././experiment/c/' + path + '_c.csv')
+    df_c = pd.read_csv('././experiment/c/' + path + '_mc.csv')
     df_s = pd.read_csv('././experiment/s/' + path + '.csv')
 
     if df_c.shape[0] != df_s.shape[0]:
@@ -28,7 +28,8 @@ for path in paths:
     dirty_idx = pickle.load(f)
 
     for idx in dirty_idx:
-        if df_c.iloc[idx[0],idx[1]].startswith('FromKB'):
+        rstr = str(df_c.iloc[idx[0],idx[1]])
+        if rstr.startswith('FromKB'):
             n += 1
             continue
         if df_c.iloc[idx[0],idx[1]] == df_s.iloc[idx[0],idx[1]]:

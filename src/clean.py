@@ -62,7 +62,6 @@ def loopMatching(n2,rela):
     df = kb[(kb.n2 == ' ' + n2) & (kb.rela == rela)]
     if len(df) != 0:
         return df.n1.values[0]
-    pass
 
 def repair(n_list,rela_list):
     l = list()
@@ -100,7 +99,6 @@ for i in idx_r:
 
     rep = repair(n_l, r_l)
     if rep != None:
-        # print(rep)
         df.iloc[i,j] = 'FromKB' + rep
 
     n += 1

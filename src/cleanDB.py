@@ -2,6 +2,9 @@
 
 import pandas as pd
 import numpy as np
+import pickle
+import math
+from collections import Counter
 
 kb = pd.read_csv('././kb/tinykb.csv')
 kb.columns = ['n1', 'rela', 'n2']
@@ -102,8 +105,8 @@ def getTwoTableRela(t1,t2,c1,c2):
                 count += 1
                 if count > 3:
                     h1,h2 = findClosetPattern(t1,t2,r1,r2,c1,c2)
-                    if t1 == 0 and t2 == 1 and c1 == 1 and c2 == 1:
-                        print(r,h1,h2)
+                    # if t1 == 0 and t2 == 1 and c1 == 1 and c2 == 1:
+                    #     print(r,h1,h2)
                     return r,h1,h2
 
             # loop control
@@ -114,11 +117,13 @@ def getTwoTableRela(t1,t2,c1,c2):
 
     return None,-1,-1
 
+'''
 # find patten
 pattern = np.empty([c,c], dtype=np.object)
-
+n = 0
 for i in range(0,c):
     for j in range(i+1,c):
+        n += 1
         t1,c1 = findIdx(i)
         t2,c2 = findIdx(j)
         if t1 == t2:
@@ -141,21 +146,144 @@ for i in range(0,c):
         if r != None:
             pattern[i,j] = r
             pattern[j,i] = r
-        #print(i,j)
+        print('\r' + 'find pattern:' + str(n) + ' / ' + str(math.ceil(c*c/2)), end='', flush=True)
 
-print(pattern)
-pa = pd.DataFrame(pattern)
-pa.to_csv('././experiment/pattern.csv')
+# print(pattern)
+# pa = pd.DataFrame(pattern)
+# pa.to_csv('././experiment/pattern.csv', index=False)
+
+f = open('././experiment/pattern.bin','wb')
+pickle.dump(pattern,f)
+f.close()
+'''
+
+
+f = open('././experiment/pattern.bin', "rb")
+pattern = pickle.load(f)
+
+# TODO: here to load pattern
+# pattern_df = pd.read_csv('././experiment/pattern.csv')
+# pattern = pattern_df.values
 
 # repair
-def repairTable(df):
-    pass
+# findIdxRange find the idx range by the t idx in tables
+def findIdxRange(t):
+    i = -1
+    a = 0
+    b = 0
+    for s in shape:
+        i += 1
+        if i == t:
+            b = a + s[1]
+            break
+        a += s[1]
+
+    # a+1 means we don't need consider id
+    return range(a+1,b)
+
+def loopMatch(n2,rela):
+    # n1 is the source node
+    df = kb[(kb.n1.str.contains(n2)) & (kb.rela == rela)]
+    if len(df) != 0:
+        return df.n2.values[0]
+    # n2 is the source node
+    df = kb[(kb.n2 == ' ' + n2) & (kb.rela == rela)]
+    if len(df) != 0:
+        return df.n1.values[0]
+
+def complexMatch(t1,c1,r_arr,r1,t2,c2):
+    df = tables[t1]
+    h1 = getIdx(t1,c1)
+    h2 = getIdx(t2,c2)
+    rela = pattern[h1,h2]
+    rep = loopMatch(df.iloc[r1,c1],rela)
+    if rep == None:
+        return None
+
+    rep = rep.replace(' ', '')
+
+    # find the 'is' one
+    i = -1
+    for r in r_arr:
+        i += 1
+        if r == 'is':
+            df2 = tables[t2]
+            # BUG
+            c_name = df2.columns.values[c2]
+            rdf = df2.loc[df2[c_name] == rep]
+            _,c = findIdx(i)
+            vs = rdf.iloc[:,c].values
+            return vs[0]
+
+def repairOne(t_idx, r_idx, r_arr):
+    df = tables[t_idx]
+    idxRange = findIdxRange(t_idx)
+    l = list()
+    rc = -1
+    first = -1
+    for rela in r_arr:
+        rc += 1
+        if rela == None:
+            continue
+
+        first += 1
+        if rc not in idxRange:
+            continue
+
+        i_l = rela.split('_')
+        # this datum need be find in another table
+        if len(i_l) == 3 and first == 0:
+            t1 = t_idx
+            t2 = int(i_l[1])
+            c1 = int(i_l[0])
+            c2 = int(i_l[2])
+            rep = complexMatch(t1,c1,r_arr,r_idx,t2,c2)
+            return rep, False
+
+        p = loopMatch(df.iloc[r_idx,rc],rela)
+        if p != None:
+            l.append(p)
+
+    rep = Counter(l).most_common(1)
+    if len(rep) != 0:
+        return rep[0][0], True
+
+    return None, False
+
+
+def repairTable(idx):
+    df = tables[idx]
+    idx_r,idx_c = np.where(df=='dirty_data')
+    # print(idx_r,idx_c)
+    n = -1
+    for i in idx_r:
+        # i is the dirty data row number
+        n += 1
+        j = idx_c[n]
+        h = getIdx(idx,j)
+
+        # get the col in pattern
+        a = pattern[:,h]
+
+        rep, fromKB = repairOne(idx, i, a)
+        if rep != None and fromKB == True:
+            df.iloc[i,j] = 'FromKB' + rep
+        else:
+            print(type(rep))
+            df.iloc[i,j] = rep
 
 i = -1
-for df in tables:
+for nc in needClean:
     i += 1
-    if needClean == 0:
+    if nc == 0:
         continue
-    repairTable(df)
+    repairTable(i)
 
 # write back
+i = -1
+for path in paths:
+    i += 1
+    if needClean[i] == 0:
+        continue
+    df = tables[i]
+    df.to_csv('././experiment/c/' + path + '_mc.csv', index=False)
