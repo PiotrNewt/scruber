@@ -11,7 +11,7 @@ kb.columns = ['n1', 'rela', 'n2']
 print('load KB finished')
 
 paths = ['player','team','league','country','stadium']
-needClean = [1,0,0,0,0]
+needClean = [1,1,0,0,0]
 tables = []
 shape = []
 
@@ -208,12 +208,12 @@ def complexMatch(t1,c1,r_arr,r1,t2,c2):
         i += 1
         if r == 'is':
             df2 = tables[t2]
-            # BUG
             c_name = df2.columns.values[c2]
             rdf = df2.loc[df2[c_name] == rep]
             _,c = findIdx(i)
             vs = rdf.iloc[:,c].values
-            return vs[0]
+            if len(vs) != 0:
+                return vs[0]
 
 def repairOne(t_idx, r_idx, r_arr):
     df = tables[t_idx]
@@ -240,7 +240,12 @@ def repairOne(t_idx, r_idx, r_arr):
             rep = complexMatch(t1,c1,r_arr,r_idx,t2,c2)
             return rep, False
 
-        p = loopMatch(df.iloc[r_idx,rc],rela)
+        fi = findIdx(rc)
+        if fi[0] != t_idx:
+            print('find idx error: t-{}, e-{}'.format(t_idx,fi[0]))
+            return None, False
+
+        p = loopMatch(df.iloc[r_idx,fi[1]],rela)
         if p != None:
             l.append(p)
 
@@ -269,12 +274,13 @@ def repairTable(idx):
         if rep != None and fromKB == True:
             df.iloc[i,j] = 'FromKB' + rep
         else:
-            print(type(rep))
             df.iloc[i,j] = rep
 
-i = -1
-for nc in needClean:
-    i += 1
+        print('\r' + paths[idx] + '-cleaned:' + str(n+1) + ' / ' + str(len(idx_r)), end='', flush=True)
+
+i = len(paths)
+for nc in needClean[::-1]:
+    i -= 1
     if nc == 0:
         continue
     repairTable(i)

@@ -4,8 +4,8 @@ import pandas as pd
 import math
 import pickle
 
-paths = ['country','league','player','stadium','team']
-c_bool = [0,0,1,0,0]
+paths = ['player','team','league','country','stadium']
+c_bool = [1,1,0,0,0]
 
 i = 0
 result = []
