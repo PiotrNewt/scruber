@@ -12,7 +12,7 @@ import pickle
 # team      50 * 7
 
 paths = ['player','team','league','country','stadium']
-ps = [0.01,0.01,0,0,0]
+ps = [0.1,0,0,0,0]
 
 i = 0
 for path in paths:

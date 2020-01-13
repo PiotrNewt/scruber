@@ -11,7 +11,7 @@ kb.columns = ['n1', 'rela', 'n2']
 print('load KB finished')
 
 paths = ['player','team','league','country','stadium']
-needClean = [1,1,0,0,0]
+needClean = [1,0,0,0,0]
 tables = []
 shape = []
 
@@ -117,8 +117,8 @@ def getTwoTableRela(t1,t2,c1,c2):
 
     return None,-1,-1
 
-'''
 # find patten
+'''
 pattern = np.empty([c,c], dtype=np.object)
 n = 0
 for i in range(0,c):
@@ -157,13 +157,9 @@ pickle.dump(pattern,f)
 f.close()
 '''
 
-
+# here to load pattern
 f = open('././experiment/pattern.bin', "rb")
 pattern = pickle.load(f)
-
-# TODO: here to load pattern
-# pattern_df = pd.read_csv('././experiment/pattern.csv')
-# pattern = pattern_df.values
 
 # repair
 # findIdxRange find the idx range by the t idx in tables
@@ -245,7 +241,12 @@ def repairOne(t_idx, r_idx, r_arr):
             print('find idx error: t-{}, e-{}'.format(t_idx,fi[0]))
             return None, False
 
-        p = loopMatch(df.iloc[r_idx,fi[1]],rela)
+        if df.iloc[r_idx,fi[1]] == None:
+            continue
+
+        # print(str(df.iloc[r_idx,fi[1]]),rela)
+
+        p = loopMatch(str(df.iloc[r_idx,fi[1]]),rela)
         if p != None:
             l.append(p)
 

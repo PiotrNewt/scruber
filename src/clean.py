@@ -10,7 +10,7 @@ kb.columns = ['n1', 'rela', 'n2']
 print('load KB finished')
 
 paths = ['player','team','league','country','stadium']
-needClean = [1,1,0,0,0]
+needClean = [1,0,0,0,0]
 
 def getRela(n1,n2):
     # n1 is the source node
@@ -53,6 +53,8 @@ def cleanTable(path):
     # if an attribute column has no relationship with the other,
     # we find the point with the highest degree( maybe N0.1,2,3 ) and ask crowd
 
+    def is_nan(x):
+        return (x is np.nan or x != x)
 
     def loopMatching(n2,rela):
         # n1 is the source node
@@ -68,6 +70,9 @@ def cleanTable(path):
         l = list()
         i = 0
         for r in rela_list:
+            if is_nan(n_list[i]):
+                continue
+            # print(n_list[i],r)
             p = loopMatching(n_list[i],r)
             if p != None:
                 l.append(p)
