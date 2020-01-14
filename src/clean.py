@@ -2,7 +2,11 @@
 
 import pandas as pd
 import numpy as np
+import datetime
+
 from collections import Counter
+
+starttime = datetime.datetime.now()
 
 kb = pd.read_csv('././kb/tinykb.csv')
 kb.columns = ['n1', 'rela', 'n2']
@@ -10,7 +14,7 @@ kb.columns = ['n1', 'rela', 'n2']
 print('load KB finished')
 
 paths = ['player','team','league','country','stadium']
-needClean = [1,0,0,0,0]
+needClean = [1,1,0,0,0]
 
 def getRela(n1,n2):
     # n1 is the source node
@@ -118,3 +122,7 @@ for nc in needClean:
     if nc == 0:
         continue
     cleanTable(paths[i])
+
+print('\n')
+endtime = datetime.datetime.now()
+print(endtime - starttime)

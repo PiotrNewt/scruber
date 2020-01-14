@@ -5,7 +5,7 @@ import math
 import pickle
 
 paths = ['player','team','league','country','stadium']
-c_bool = [1,0,0,0,0]
+c_bool = [1,1,0,0,0]
 
 i = 0
 result = []

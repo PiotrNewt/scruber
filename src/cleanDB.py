@@ -4,14 +4,18 @@ import pandas as pd
 import numpy as np
 import pickle
 import math
+import datetime
+
 from collections import Counter
+
+starttime = datetime.datetime.now()
 
 kb = pd.read_csv('././kb/tinykb.csv')
 kb.columns = ['n1', 'rela', 'n2']
 print('load KB finished')
 
 paths = ['player','team','league','country','stadium']
-needClean = [1,0,0,0,0]
+needClean = [1,1,0,0,0]
 tables = []
 shape = []
 
@@ -294,3 +298,7 @@ for path in paths:
         continue
     df = tables[i]
     df.to_csv('././experiment/c/' + path + '_mc.csv', index=False)
+
+print('\n')
+endtime = datetime.datetime.now()
+print(endtime - starttime)
