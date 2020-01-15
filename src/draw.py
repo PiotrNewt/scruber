@@ -40,59 +40,127 @@ plt.ylabel('repair rate')
 plt.legend()
 '''
 
+def lineChart():
+    # for single one
+    plt.figure()
+    ax1 = plt.subplot(2,3,1)
+    ax2 = plt.subplot(2,3,2)
+    ax3 = plt.subplot(2,3,4)
+    ax4 = plt.subplot(2,3,5)
+    ax5 = plt.subplot(2,3,6)
 
-# for single one
-plt.figure()
-ax1 = plt.subplot(3,2,1)
-ax2 = plt.subplot(3,2,2)
-ax3 = plt.subplot(3,2,3)
-ax4 = plt.subplot(3,2,4)
-ax5 = plt.subplot(3,2,5)
+    # stadium
+    plt.sca(ax1)
+    plt.plot(x,stadium1,'r--',label='s-stadium')
+    plt.plot(x,stadium2,'b--',label='m-stadium')
+    plt.plot(x,stadium1,'ro--',x,stadium2,'bx--')
+    plt.xlabel('dirty rate')
+    plt.ylabel('repair rate')
+    plt.legend()
 
-# stadium
-plt.sca(ax1)
-plt.plot(x,stadium1,'r--',label='s-stadium')
-plt.plot(x,stadium2,'b--',label='m-stadium')
-plt.plot(x,stadium1,'ro--',x,stadium2,'bx--')
-plt.xlabel('dirty rate')
-plt.ylabel('repair rate')
-plt.legend()
+    # country
+    plt.sca(ax2)
+    plt.plot(x,country1,'r--',label='s-country')
+    plt.plot(x,country2,'b--',label='m-country')
+    plt.plot(x,country1,'ro--',x,country2,'bx--')
+    plt.xlabel('dirty rate')
+    plt.ylabel('repair rate')
+    plt.legend()
 
-# country
-plt.sca(ax2)
-plt.plot(x,country1,'r--',label='s-country')
-plt.plot(x,country2,'b--',label='m-country')
-plt.plot(x,country1,'ro--',x,country2,'bx--')
-plt.xlabel('dirty rate')
-plt.ylabel('repair rate')
-plt.legend()
+    # league
+    plt.sca(ax3)
+    plt.plot(x,league1,'r--',label='s-league')
+    plt.plot(x,league2,'b--',label='m-league')
+    plt.plot(x,league1,'ro--',x,league2,'bx--')
+    plt.xlabel('dirty rate')
+    plt.ylabel('repair rate')
+    plt.legend()
 
-# league
-plt.sca(ax3)
-plt.plot(x,league1,'r--',label='s-league')
-plt.plot(x,league2,'b--',label='m-league')
-plt.plot(x,league1,'ro--',x,league2,'bx--')
-plt.xlabel('dirty rate')
-plt.ylabel('repair rate')
-plt.legend()
+    # team
+    plt.sca(ax4)
+    plt.plot(x,team1,'r--',label='s-team')
+    plt.plot(x,team2,'b--',label='m-team')
+    plt.plot(x,team1,'ro--',x,team2,'bx--')
+    plt.xlabel('dirty rate')
+    plt.ylabel('repair rate')
+    plt.legend()
 
-# team
-plt.sca(ax4)
-plt.plot(x,team1,'r--',label='s-team')
-plt.plot(x,team2,'b--',label='m-team')
-plt.plot(x,team1,'ro--',x,team2,'bx--')
-plt.xlabel('dirty rate')
-plt.ylabel('repair rate')
-plt.legend()
+    # player
+    plt.sca(ax5)
+    plt.plot(x,player1,'r--',label='s-player')
+    plt.plot(x,player2,'b--',label='m-player')
+    plt.plot(x,player1,'ro--',x,player2,'bx--')
+    plt.xlabel('dirty rate')
+    plt.ylabel('repair rate')
+    plt.legend()
 
-# player
-plt.sca(ax5)
-plt.plot(x,player1,'r--',label='s-player')
-plt.plot(x,player2,'b--',label='m-player')
-plt.plot(x,player1,'ro--',x,player2,'bx--')
-plt.xlabel('dirty rate')
-plt.ylabel('repair rate')
-plt.legend()
+    plt.show()
 
-plt.show()
 
+# Histogram
+def histogram():
+    def subHisto(table_name,r1,r2):
+        def fixO(r):
+            for i in range(len(r)):
+                if r[i] == 0:
+                    r[i] = 0.001
+
+        fixO(r1)
+        fixO(r2)
+
+        x_list = ['0.01', '0.05', '0.1', '0.15', '0.2', '0.25', '0.3']
+        ticky = [0,0,0,0,0,0,0]
+        xh = list(range(len(r1)))
+        total_width, n = 0.6, 2
+        width = total_width / n
+        plt.bar(xh, r1, width=width, label='s-' + table_name,fc = 'r')
+
+        a = []
+        for i in range(len(xh)):
+            a.append(xh[i] + width/2)
+        plt.bar(a, ticky, width=0,tick_label = x_list,fc = 'b')
+
+        for i in range(len(xh)):
+            xh[i] = xh[i] + width
+
+        plt.bar(xh, r2, width=width, label='m-' + table_name,fc = 'b')
+        # plt.bar(xh, r2, width=width, label='m-' + table_name,tick_label = x_list,fc = 'b')
+
+        # plt.ylim(0,1.05)
+        plt.xlabel('dirty rate')
+        plt.ylabel('repair rate')
+        plt.legend()
+
+    plt.figure()
+    h1 = plt.subplot(2,3,1)
+    h2 = plt.subplot(2,3,2)
+    h3 = plt.subplot(2,3,4)
+    h4 = plt.subplot(2,3,5)
+    h5 = plt.subplot(2,3,6)
+
+    # stadium
+    plt.sca(h1)
+    subHisto('stadium', stadium1, stadium2)
+
+    # country
+    plt.sca(h2)
+    subHisto('country', country1, country2)
+
+    # league
+    plt.sca(h3)
+    subHisto('league', league1, league2)
+
+    # team
+    plt.sca(h4)
+    subHisto('team', team1, team2)
+
+    # player
+    plt.sca(h5)
+    subHisto('player', player1, player2)
+
+    plt.show()
+
+
+#----
+lineChart()
+histogram()
