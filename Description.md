@@ -1,5 +1,3 @@
-Scruber
-===
 ## Problem Description
 In relational database data cleaning, [KATARA](http://da.qcri.org/ntang/dcprojects/katara.html)[ | (here is the paper)](http://da.qcri.org/ntang/pubs/katara.pdf) has been able to better clean data for single tables by using knowledge base and crowd.
 
@@ -35,13 +33,20 @@ for t in table_list:
     for C in col_list:
         if No correlation between C and other data columns in KB：
             Sort existing degrees of nodes in this table
-            Query the association relationship between the node with the largest degree A and the other nodes with the largest degree B in KB
+
+            Query the association relationship between the node with
+            the largest degree A and the other nodes with the largest degree B in KB
+
             if If there is a relation：
-                Add the relationship that has been found in the pattern (reduce the repeated query after)
+                Add the relationship that has been found in the pattern
+                (for reducing the repeated query after)
+
                 For another match table:
-                    Count the number of unique values ​​D in all node columns in the table
-                    Take the largest node F and establish a 'link' relationship with the matching node column B
-                    verify A --'kbr'--> B --'link'--> F --'is'-- C
+                    Count the number of unique values ​​D in all node columns in
+                    the table, take the largest node F and establish a 'link'
+                    relationship with the matching node column B
+
+                    Verify A --'kbr'--> B --'link'--> F --'is'-- C
                     if so：build coding relationships A --'t2-c(A)-c(B)' --> C
             else：
                 Take the node with the second highest degree to continue
@@ -56,17 +61,22 @@ Because the pattern of the entire database is too large, only the relationship b
 ##### 2 Table Data Cleaning
 When cleaning data, you need to consider the association between different tables for cleaning, including:
 ```go
-Find the connected branches of the pattern, and do the following for each connected branch:
-Count the sum of the degrees of all nodes (columns) of each table in the connected branch
+Find the connected branches of the pattern,
+and do the following for each connected branch:
+
+Count the sum of the degrees of all nodes of each table in the connected branch
 for Table t with the lowest degree (lowest degree of correlation) in table_list:
     Clean the data in the table according to the pattern：
         for dirty datum dd：
-        if There are KB-related edges in the pattern. First, clean up by KB-related edges:
+        if There are KB-related edges in the pattern.
+        First, clean up by KB-related edges:
+
             Get all correlated columns c_list
             for relationship in pattern：
                 Get existing data cd
                 Enter relationship, cd to find possible values ​​for dd from KB
             Count the possible values, take the value that appears the most
+
         else if：There is edge with encoding relationship
             Inverse coding solves t1, c1, c2
             Quickly find matching data by encoding

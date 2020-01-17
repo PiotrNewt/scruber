@@ -15,7 +15,7 @@ kb.columns = ['n1', 'rela', 'n2']
 print('load KB finished')
 
 paths = ['player','team','league','country','stadium']
-needClean = [1,1,0,0,0]
+needClean = [1,0,0,0,0]
 tables = []
 shape = []
 
