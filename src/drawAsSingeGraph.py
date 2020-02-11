@@ -16,63 +16,34 @@ league2 = [1/3, 1, 2/3, 7/12, 9/15, 15/21, 14/24]
 team2 = [1, 13/15, 37/45, 111/135, 133/180, 165/225, 181/270]
 player2 = [167/177, 785/876, 1517/1752, 2175/2628, 2764/3504, 3240/4380, 3675/5256]
 
-'''
-def lineChart():
-    # for single one
+def sublineChart(table_name,r1,r2):
+    # new graph
     plt.figure()
-    ax1 = plt.subplot(2,3,1)
-    ax2 = plt.subplot(2,3,2)
-    ax3 = plt.subplot(2,3,4)
-    ax4 = plt.subplot(2,3,5)
-    ax5 = plt.subplot(2,3,6)
-
-    # stadium
-    plt.sca(ax1)
-    plt.plot(x,stadium1,'r--',label='s-stadium')
-    plt.plot(x,stadium2,'b--',label='m-stadium')
-    plt.plot(x,stadium1,'ro--',x,stadium2,'bx--')
+    plt.plot(x,r1,'r--',label='s-' + table_name)
+    plt.plot(x,r2,'b--',label='m-' + table_name)
+    plt.plot(x,r1,'ro--',x,r2,'bx--')
     plt.xlabel('dirty rate')
     plt.ylabel('repair rate')
     plt.legend()
+
+def lineChart():
+    # stadium
+    sublineChart('stadium', stadium1, stadium2)
 
     # country
-    plt.sca(ax2)
-    plt.plot(x,country1,'r--',label='s-country')
-    plt.plot(x,country2,'b--',label='m-country')
-    plt.plot(x,country1,'ro--',x,country2,'bx--')
-    plt.xlabel('dirty rate')
-    plt.ylabel('repair rate')
-    plt.legend()
+    sublineChart('country', country1, country2)
 
     # league
-    plt.sca(ax3)
-    plt.plot(x,league1,'r--',label='s-league')
-    plt.plot(x,league2,'b--',label='m-league')
-    plt.plot(x,league1,'ro--',x,league2,'bx--')
-    plt.xlabel('dirty rate')
-    plt.ylabel('repair rate')
-    plt.legend()
+    sublineChart('league', league1, league2)
 
     # team
-    plt.sca(ax4)
-    plt.plot(x,team1,'r--',label='s-team')
-    plt.plot(x,team2,'b--',label='m-team')
-    plt.plot(x,team1,'ro--',x,team2,'bx--')
-    plt.xlabel('dirty rate')
-    plt.ylabel('repair rate')
-    plt.legend()
+    sublineChart('team', team1, team2)
 
     # player
-    plt.sca(ax5)
-    plt.plot(x,player1,'r--',label='s-player')
-    plt.plot(x,player2,'b--',label='m-player')
-    plt.plot(x,player1,'ro--',x,player2,'bx--')
-    plt.xlabel('dirty rate')
-    plt.ylabel('repair rate')
-    plt.legend()
+    sublineChart('player', player1, player2)
 
     plt.show()
-'''
+
 
 # Histogram
 def histogram():
@@ -104,9 +75,7 @@ def histogram():
             xh[i] = xh[i] + width
 
         plt.bar(xh, r2, width=width, label='m-' + table_name,fc = 'b')
-        # plt.bar(xh, r2, width=width, label='m-' + table_name,tick_label = x_list,fc = 'b')
 
-        # plt.ylim(0,1.05)
         plt.xlabel('dirty rate')
         plt.ylabel('repair rate')
         plt.legend()
@@ -130,5 +99,5 @@ def histogram():
 
 
 #----
-#lineChart()
+lineChart()
 histogram()
