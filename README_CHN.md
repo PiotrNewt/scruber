@@ -1,5 +1,10 @@
 Scruber
 ===
+![Data Repair](https://img.shields.io/badge/Data%20Repair-gray.svg)
+![python3.7](https://img.shields.io/badge/Python-3.7-blue.svg)
+
+[English](./README.md) | 简体中文
+
 ## 问题说明
 在关系型数据库数据清洗中，[KATARA](http://da.qcri.org/ntang/dcprojects/katara.html)[ | (这里是论文)]()通过使用知识图谱和外包人力已经可以较好的对单表进行数据清洗。
 
@@ -9,11 +14,9 @@ Scruber
 
 例如上图，**Team** 表中所有的 *league_id* 和 *stadium_id* 实际上是其它表中的数据，在不知道数据表元信息的情况下，如果我们直接将 **15、91、938** 输入到知识图谱中是无法得到我们期望的结果的。
 
----
 ## 简单的 Idea
 如果我们能同时对整个数据库建立 Pattern，然后使用 Pattern 对表进行数据清洗，那么在知识图谱无法得到我们期望的结果的时候，我们依然可以通过查找其它的表来修正有问题的数据。
 
----
 ## 实验
 ### 数据说明
 - KB: 使用大小较为合理的类 RDF 数据集来模拟知识图查询
@@ -24,7 +27,7 @@ Scruber
     - [kaggle-soccer](https://www.kaggle.com/hugomathien/soccer)
 
 ### 主要算法
-##### 1 多表 Pattern 建立
+#### 1 多表 Pattern 建立
 Pattern 的建立实际上是建立一个边带语义的有向图，Pattern 的作用是能够对应到知识图谱中的结构，于是我们就能对于任意两个匹配的实体（顶点），从知识图谱中查询到语义关系（边）。同样，对于任意一个匹配的实体和语义关系，查询到另一个相关联的实体。
 
 这里我们需要解决的的是如何在不知道表元信息的情况下，将 id 合理的添加到 Pattern 中，于是有：
@@ -52,7 +55,7 @@ for t in table_list:
 
 由于整个数据库的 Pattern 过大，这里只展示两个表的关系。
 
-##### 2 表数据清洗
+#### 2 表数据清洗
 数据清洗时候需要考虑到不同表之间的关联关系进行清理，有：
 ```python
 寻找 Pattern 的连通分支，对每个连通分支进行如下操作：
@@ -79,5 +82,4 @@ for 度最小的表t（关联度最低）in table_list:
 
 同时，可以看到图 [0,0] 中由于 stadium 在 KB 中的数据比较少所以数据清洗效果都不好，图 [0,1] 中 country则恰好相反，同时由于其没有存在外键所以清洗效果相当。
 
-![](././experiment/r/r_single_table_repair2x3.png)
 ![](././experiment/r/r_single_table_repair_histogram.png)
