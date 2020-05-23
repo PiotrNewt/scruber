@@ -12,7 +12,7 @@ import pickle
 # team      50 * 7
 
 paths = ['player','team','league','country','stadium']
-ps = [0.1,0,0,0,0]
+ps = [0,0,0,0,0.25]
 
 i = 0
 for path in paths:
@@ -21,7 +21,7 @@ for path in paths:
         i += 1
         continue
 
-    df = pd.read_csv('././experiment/s/' + path + '.csv')
+    df = pd.read_csv('../experiment/s/' + path + '.csv')
     n_row = df.shape[0]
     n_col = df.shape[1] - 1 # do not dirty the id (-1)
 
@@ -37,8 +37,8 @@ for path in paths:
     for idx_p in dirty_idx:
         df.iloc[idx_p[0],idx_p[1]] = 'dirty_data'
 
-    df.to_csv('././experiment/d/' + path + '_d.csv', index=False)
-    f = open('././experiment/d/' + path + '_rand.bin','wb')
+    df.to_csv('../experiment/d/' + path + '_d.csv', index=False)
+    f = open('../experiment/d/' + path + '_rand.bin','wb')
     pickle.dump(dirty_idx,f)
     f.close()
     i += 1

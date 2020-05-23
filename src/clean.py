@@ -8,13 +8,13 @@ from collections import Counter
 
 starttime = datetime.datetime.now()
 
-kb = pd.read_csv('././kb/tinykb.csv')
+kb = pd.read_csv('../kb/tinykb.csv')
 kb.columns = ['n1', 'rela', 'n2']
 
 print('load KB finished')
 
 paths = ['player','team','league','country','stadium']
-needClean = [1,1,0,0,0]
+needClean = [0,0,0,0,1]
 
 def getRela(n1,n2):
     # n1 is the source node
@@ -29,10 +29,10 @@ def getRela(n1,n2):
 def cleanTable(path):
     # reusable
     # path = 'player'
-    df = pd.read_csv('././experiment/d/' + path + '_d.csv')
+    df = pd.read_csv('../experiment/d/' + path + '_d.csv')
 
     # find pattern
-    n_row = df.shape[0]
+    _ = df.shape[0]
     n_col = df.shape[1]
 
     pattern = np.empty([n_col,n_col], dtype=np.object)
@@ -114,7 +114,8 @@ def cleanTable(path):
         n += 1
         print('\r' + path + '-cleaned:' + str(n) + ' / ' + str(len(idx_r)), end='', flush=True)
 
-    df.to_csv('././experiment/c/' + path + '_c.csv', index=False)
+    print(pattern)
+    df.to_csv('../experiment/c/' + path + '_c.csv', index=False)
 
 i = -1
 for nc in needClean:

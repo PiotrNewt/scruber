@@ -10,12 +10,12 @@ from collections import Counter
 
 starttime = datetime.datetime.now()
 
-kb = pd.read_csv('././kb/tinykb.csv')
+kb = pd.read_csv('../kb/tinykb.csv')
 kb.columns = ['n1', 'rela', 'n2']
 print('load KB finished')
 
 paths = ['player','team','league','country','stadium']
-needClean = [1,0,0,0,0]
+needClean = [0,0,0,0,0]
 tables = []
 shape = []
 
@@ -25,9 +25,9 @@ for path in paths:
     i += 1
     df = pd.DataFrame()
     if needClean[i] == 1:
-        df = pd.read_csv('././experiment/d/' + path + '_d.csv')
+        df = pd.read_csv('../experiment/d/' + path + '_d.csv')
     else:
-        df = pd.read_csv('././experiment/s/' + path + '.csv')
+        df = pd.read_csv('../experiment/s/' + path + '.csv')
     c += df.shape[1]
     tables.append(df)
     shape.append([df.shape[0],df.shape[1]])
@@ -58,11 +58,14 @@ def getSingleTableRela(t,c1,c2):
     df = tables[t]
     r = ''
     for k, _ in df.iterrows():
-        if (df.iloc[k,c1] == 'dirty_data') & (df.iloc[k,c2] == 'dirty_data'):
+        #if (df.iloc[k,c1] == 'dirty_data') & (df.iloc[k,c2] == 'dirty_data'):
+        if (df.iloc[k,c1] == 'dirty_data') | (df.iloc[k,c2] == 'dirty_data'):
             continue
         n1 = df.iloc[k,c1]
         n2 = df.iloc[k,c2]
-        r = getRela(n1,n2)
+        curR = getRela(n1,n2)
+        if curR != '' or curR != None:
+            r = curR
         if k >= 10:
             return r
     return r
@@ -109,8 +112,6 @@ def getTwoTableRela(t1,t2,c1,c2):
                 count += 1
                 if count > 3:
                     h1,h2 = findClosetPattern(t1,t2,r1,r2,c1,c2)
-                    # if t1 == 0 and t2 == 1 and c1 == 1 and c2 == 1:
-                    #     print(r,h1,h2)
                     return r,h1,h2
 
             # loop control
@@ -122,7 +123,6 @@ def getTwoTableRela(t1,t2,c1,c2):
     return None,-1,-1
 
 # find patten
-'''
 pattern = np.empty([c,c], dtype=np.object)
 n = 0
 for i in range(0,c):
@@ -130,6 +130,7 @@ for i in range(0,c):
         n += 1
         t1,c1 = findIdx(i)
         t2,c2 = findIdx(j)
+        r = ''
         if t1 == t2:
             r = getSingleTableRela(t1,c1,c2)
         else:
@@ -153,16 +154,16 @@ for i in range(0,c):
         print('\r' + 'find pattern:' + str(n) + ' / ' + str(math.ceil(c*c/2)), end='', flush=True)
 
 # print(pattern)
-# pa = pd.DataFrame(pattern)
-# pa.to_csv('././experiment/pattern.csv', index=False)
+pa = pd.DataFrame(pattern)
+pa.to_csv('../experiment/patternxx.csv', index=False)
 
-f = open('././experiment/pattern.bin','wb')
+f = open('../experiment/patternxx.bin','wb')
 pickle.dump(pattern,f)
 f.close()
-'''
 
+'''
 # here to load pattern
-f = open('././experiment/pattern.bin', "rb")
+f = open('../experiment/patternxx.bin', "rb")
 pattern = pickle.load(f)
 
 # repair
@@ -278,8 +279,8 @@ def repairTable(idx):
         rep, fromKB = repairOne(idx, i, a)
         if rep != None and fromKB == True:
             df.iloc[i,j] = 'FromKB' + rep
-        else:
-            df.iloc[i,j] = rep
+        #else:
+        #    df.iloc[i,j] = rep
 
         print('\r' + paths[idx] + '-cleaned:' + str(n+1) + ' / ' + str(len(idx_r)), end='', flush=True)
 
@@ -297,8 +298,9 @@ for path in paths:
     if needClean[i] == 0:
         continue
     df = tables[i]
-    df.to_csv('././experiment/c/' + path + '_mc.csv', index=False)
+    df.to_csv('../experiment/c/' + path + '_mc.csv', index=False)
 
 print('\n')
 endtime = datetime.datetime.now()
 print(endtime - starttime)
+'''

@@ -5,7 +5,7 @@ import math
 import pickle
 
 paths = ['player','team','league','country','stadium']
-c_bool = [1,0,0,0,0]
+c_bool = [0,0,0,0,1]
 
 i = 0
 result = []
@@ -16,15 +16,15 @@ for path in paths:
         continue
 
     n = 0
-    df_c = pd.read_csv('././experiment/c/' + path + '_mc.csv')
-    df_s = pd.read_csv('././experiment/s/' + path + '.csv')
+    df_c = pd.read_csv('../experiment/c/' + path + '_mc.csv')
+    df_s = pd.read_csv('../experiment/s/' + path + '.csv')
 
     if df_c.shape[0] != df_s.shape[0]:
         print('Data shape error: {}'.format(path))
         i += 1
         continue
 
-    f = open('././experiment/d/' + path + '_rand.bin', "rb")
+    f = open('../experiment/d/' + path + '_rand.bin', "rb")
     dirty_idx = pickle.load(f)
 
     for idx in dirty_idx:
