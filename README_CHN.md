@@ -10,7 +10,9 @@ Scruber
 
 但是由于关系数据库的特殊结构，同时为了节省存储空间，单个关系表的外键往往存储其它关系表的实体的 ID 而不是整个字段，此时知识图谱将无法对一个简单独立的 ID 字段进行判断。该问题在假设清洗时不知道表的元数据信息显得更加严重。
 
-![](././experiment/r/graph1.png)
+<p align="center">
+	<img src="././experiment/r/graph1.png" width="650"/>
+</p>
 
 例如上图，**Team** 表中所有的 *league_id* 和 *stadium_id* 实际上是其它表中的数据，在不知道数据表元信息的情况下，如果我们直接将 **15、91、938** 输入到知识图谱中是无法得到我们期望的结果的。
 
@@ -51,7 +53,9 @@ for t in table_list:
 ```
 其中 kbr 代表从 KB（knowledge base）中获取的关系，t2 表示找到的匹配表编号，c(A) 表示 A 所在列编号。使用编码关系可以在修复阶段通过逆编码快速查找到数据。算法完成后的 Pattern 如下图：
 
-![](././experiment/r/graph2.png)
+<p align="center">
+	<img src="././experiment/r/graph2.png" width="650"/>
+</p>
 
 由于整个数据库的 Pattern 过大，这里只展示两个表的关系。
 
@@ -76,10 +80,12 @@ for 度最小的表t（关联度最低）in table_list:
 从总度数最小的表先进行清洗是为了最大程度的将清洗后修复的值二次利用到相关的表的清洗中。
 
 ### 结果
-这里做了单表清洗的对比，包括折线图和直方图。
+这里做了单表清洗的对比直方图。
 
 可以看到第二行图 [1,0],[1,1],[1,2] 由于其三个表中都存在外键列，在多表同时参与数据清洗的时候效果要比单表清洗，且可以看到随着横坐标数据表数据 dirty rate 的增大数据清洗效果逐渐下降。
 
 同时，可以看到图 [0,0] 中由于 stadium 在 KB 中的数据比较少所以数据清洗效果都不好，图 [0,1] 中 country则恰好相反，同时由于其没有存在外键所以清洗效果相当。
 
-![](././experiment/r/r_single_table_repair_histogram.png)
+<p align="center">
+	<img src="././experiment/r/r_single_table_repair_histogram.png" width="650"/>
+</p>

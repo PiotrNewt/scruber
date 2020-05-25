@@ -10,7 +10,9 @@ In relational database data cleaning, [KATARA](http://da.qcri.org/ntang/dcprojec
 
 However, due to the special structure of a relational database, and in order to save storage space, the foreign keys of a single relational table often store the IDs of entities in other relational tables instead of the entire field. At this time, the knowledge graph cannot judge a simple and independent ID field.This problem is even more serious when it is assumed that the metadata information of the table is not known during cleaning.
 
-![](././experiment/r/graph1.png)
+<p align="center">
+	<img src="././experiment/r/graph1.png" width="650"/>
+</p>
 
 For example, in the figure above, all the **league_id** and **stadium_id** in the **Team** table are actually data in other tables. Without knowing the metadata of the data table, if we directly enter **15, 91, 938** into the knowledge base, we cannot get the result our desired.
 
@@ -54,12 +56,15 @@ for t in table_list:
 ```
 Where **kbr** represents the relationship obtained from the KB (knowledge base), **t2** represents the matching table number found, and **c(A)** represents the column number where A is located.Using the encoding relationship can quickly find the data by inverse encoding during the repair phase.The pattern after the algorithm is completed is as follows:
 
-![](././experiment/r/graph2.png)
+<p align="center">
+	<img src="././experiment/r/graph2.png" width="650"/>
+</p>
 
 Because the pattern of the entire database is too large, only the relationship between the two tables is shown here.
 
 #### 2 Table Data Cleaning
 When cleaning data, you need to consider the association between different tables for cleaning, including:
+
 ```go
 Find the connected branches of the pattern, and do the following for each connected branch:
 Count the sum of the degrees of all nodes (columns) of each table in the connected branch
@@ -76,13 +81,16 @@ for Table t with the lowest degree (lowest degree of correlation) in table_list:
             Inverse coding solves t1, c1, c2
             Quickly find matching data by encoding
 ```
+
 The cleaning from the table with the lowest total degree is to maximize the use of the repaired value after cleaning to the related table cleaning.
 
 ### Result
-Here is a comparison of single-table cleaning, including line and histograms.
+Here is a comparison of single-table cleaning.
 
 You can see that the second row of the graph [1,0], [1,1], [1,2] has foreign key columns in its three tables. When multiple tables participate in data cleaning at the same time, the effect is better than single tables.Cleaning, and you can see that the data cleaning effect gradually decreases with the increase in the data rate of the abscissa data table.
 
 At the same time, it can be seen that the data cleaning effect is not good because the stadium has less data in the KB in Figure [0,0]. The country in Figure [0,1] is just the opposite, and because there is no foreign key, it is cleanedThe effect is quite.
 
-![](././experiment/r/r_single_table_repair_histogram.png)
+<p align="center">
+	<img src="././experiment/r/r_single_table_repair_histogram.png" width="650"/>
+</p>
